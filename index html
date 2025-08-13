@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">  
+<head>  
+<meta charset="utf-8" />  
+<meta name="viewport" content="width=device-width, initial-scale=1" />  
+<title>WhatsApp Panel LORDHOZOO</title>  
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">  
+<style>  
+  :root{  
+    --bg:#0b0b0b;  
+    --neon:#ff3b3b;  
+    --neon-soft:#ff6a6a;  
+    --text:#e9e9e9;  
+  }  
+  *{box-sizing:border-box}  
+  html,body{height:100%}  
+  body{  
+    margin:0;  
+    background: radial-gradient(ellipse at center, #000 0%, #000 40%, #060606 100%) fixed;  
+    color:var(--text);  
+    font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;  
+    letter-spacing:.2px;  
+  }  
+  /* Frame glow */
+  .frame{
+    max-width:1200px;
+    margin:32px auto;
+    padding:22px;
+    border-radius:22px;
+    background:#000;
+    box-shadow:
+      0 0 0 2px rgba(255,59,59,.35) inset,
+      0 0 45px 5px rgba(255,59,59,.25),
+      0 0 6px 1px rgba(255,59,59,.8) inset;
+    position:relative;
+  }
+  .frame:before{
+    content:"";
+    position:absolute; inset:-14px;
+    border-radius:30px;
+    box-shadow:0 0 80px 8px rgba(255,59,59,.35);
+    pointer-events:none;
+  }
+
+  /* Header */
+  .topbar{
+    display:flex; gap:18px; align-items:center; justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .title{
+    flex:1 1 320px;
+    text-align:center;
+    font-family:'Bebas Neue', Impact, sans-serif;
+    font-size:42px; letter-spacing:3px;
+    text-shadow:0 0 12px var(--neon-soft), 0 0 24px rgba(255,59,59,.7);
+  }
+  .btn{
+    font-weight:700;
+    border-radius:16px;
+    padding:14px 22px;
+    border:2px solid var(--neon);
+    background:linear-gradient(180deg, rgba(255,59,59,.12), rgba(255,59,59,.04));
+    color:var(--text);
+    box-shadow:0 0 16px rgba(255,59,59,.55), inset 0 0 8px rgba(255,59,59,.6);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition: transform .08s ease, box-shadow .2s ease;
+  }
+  .btn:hover{ transform:translateY(-1px) scale(1.01); box-shadow:0 0 24px rgba(255,59,59,.8), inset 0 0 10px rgba(255,59,59,.8); }
+  .btn:active{ transform:translateY(0) scale(.99); }
+  .btn-red {
+    background: linear-gradient(180deg, rgba(255, 59, 59, 0.3), rgba(255, 59, 59, 0.15));
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 16px rgba(255, 0, 0, 0.55), inset 0 0 8px rgba(255, 0, 0, 0.6);
+  }
+  .btn-connect {
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    margin: 18px auto 0;
+    padding: 16px;
+    font-size: 18px;
+    background: linear-gradient(180deg, rgba(255, 59, 59, 0.25), rgba(255, 59, 59, 0.15));
+    border: 2px solid var(--neon);
+    box-shadow: 0 0 20px rgba(255, 59, 59, 0.45), inset 0 0 10px rgba(255, 59, 59, 0.5);
+  }
+
+  /* Grid */
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap:22px;
+  }
+  @media (max-width: 980px){
+    .grid{ grid-template-columns:1fr; }
+    .title{ font-size:36px }
+  }
+
+  /* Card */
+  .card{
+    background:#000;
+    border-radius:22px;
+    padding:18px;
+    box-shadow:
+      0 0 0 3px rgba(255,59,59,.35) inset,
+      0 0 32px rgba(255,59,59,.25),
+      inset 0 0 12px rgba(255,59,59,.6);
+  }
+  .card-inner{
+    border-radius:18px;
+    padding:18px;
+    min-height:260px;
+    background:#050505;
+    box-shadow: inset 0 0 18px rgba(255,59,59,.25);
+  }
+
+  /* Left: JARVIS */
+  .jarvis{
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    gap:16px; height:100%;
+  }
+  .jarvis .figure{
+    width:100%; aspect-ratio:1 / 1;
+    background:#000;
+    border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .jarvis .figure:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(255, 59, 59, 0.6);
+  }
+  .jarvis img{
+    max-width:85%; height:auto; object-fit:contain; image-rendering:auto;
+    filter: drop-shadow(0 0 12px rgba(255,59,59,.45));
+  }
+  .jarvis .label{
+    font-family:'Bebas Neue', Impact, sans-serif;
+    font-size:44px; letter-spacing:2px;
+    text-shadow:0 0 10px var(--neon-soft);
+  }
+
+  /* Center: Phone */
+  .panel-title{
+    font-family:'Bebas Neue', Impact, sans-serif;
+    text-align:center;
+    font-size:30px; letter-spacing:2px;
+    margin:4px 0 18px;
+  }
+  .sub{
+    text-align:center; font-weight:800; margin-top:-8px; margin-bottom:16px;
+    text-shadow:0 0 8px rgba(255,59,59,.6);
+  }
+  .input-wrap{
+    border-radius:18px; padding:12px;
+    border:3px solid var(--neon);
+    box-shadow: inset 0 0 10px rgba(255,59,59,.45), 0 0 18px rgba(255,59,59,.35);
+    max-width:520px; margin:0 auto;
+  }
+  .input-row{
+    display:flex; align-items:center; gap:10px;
+    background:#070707; border-radius:12px; padding:10px 14px;
+    box-shadow: inset 0 0 12px rgba(255,59,59,.25);
+  }
+  .prefix{ font-weight:800; opacity:.9; white-space:nowrap }
+  input[type="tel"]{
+    flex:1; font:600 22px/1.2 'Montserrat', sans-serif;
+    background:transparent; border:0; outline:0; color:var(--text);
+    padding:6px 2px;
+    text-shadow:0 0 6px rgba(255,59,59,.4);
+  }
+  .note{
+    text-align:center; opacity:.85; font-size:13px; margin-top:10px;
+  }
+
+  /* Right: About */
+  .about .inner{
+    border-radius:16px; padding:16px;
+    border:3px solid var(--neon);
+    min-height:220px;
+    box-shadow: inset 0 0 10px rgba(255,59,59,.35);
+  }
+  .about h3{
+    font-family:'Bebas Neue', Impact, sans-serif;
+    font-size:36px; letter-spacing:2px; margin:0 0 14px; text-align:left;
+    text-shadow:0 0 10px var(--neon-soft);
+  }
+  .about p{ margin:8px 0; line-height:1.55 }
+
+  /* Small glow blink on focus */
+  @keyframes pulse{
+    0%,100%{ box-shadow: inset 0 0 10px rgba(255,59,59,.4), 0 0 18px rgba(255,59,59,.25); }
+    50%{ box-shadow: inset 0 0 16px rgba(255,59,59,.7), 0 0 28px rgba(255,59,59,.45); }
+  }
+  .input-wrap:focus-within{ animation:pulse 1.4s ease-in-out infinite }
+
+  /* Fake chat */
+  .fake-chat {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background: #000;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(255, 59, 59, 0.8),
+                inset 0 0 10px rgba(255, 59, 59, 0.5);
+    border: 2px solid var(--neon);
+    z-index: 1000;
+    text-align: center;
+  }
+  .fake-chat.show {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  .fake-chat h3 {
+    color: var(--neon);
+    margin-top: 0;
+  }
+  .fake-chat p {
+    margin-bottom: 20px;
+  }
+  .fake-chat-close {
+    background: var(--neon);
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  /* Overlay */
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 999;
+  }
+  .overlay.show {
+    display: block;
+  }
+</style>
+</head>  
+<body>  
+  <main class="frame">  
+    <div class="topbar">  
+      <button class="btn" id="blockBtn">🔥🔥 BLOCK 🔥🔥</button>  
+      <div class="title">WHATSAPP PANEL LORDHOZOO</div>  
+      <button class="btn" id="refreshBtn">REFRESH</button>
+    </div>  
+
+    <section class="grid">  
+      <!-- LEFT: JARVIS -->  
+      <div class="card">  
+        <div class="card-inner jarvis">  
+          <div class="figure" id="jarvisImage">  
+            <img src="https://i.redd.it/wbn2r3wre7a71.jpg" alt="Jarvis">  
+          </div>  
+          <div class="label">JARVIS</div>  
+        </div>  
+      </div>  
+
+      <!-- CENTER: PHONE INDONESIA -->  
+      <div class="card">  
+        <div class="card-inner">  
+          <div class="panel-title">PHONE INDONESIA</div>  
+          <div class="sub">+62 08</div>  
+
+          <div class="input-wrap">  
+            <div class="input-row">  
+              <span class="prefix">+62&nbsp;08</span>  
+              <input id="phone" type="tel" inputmode="numeric" autocomplete="tel"  
+                     placeholder="Masukkan sisa nomor..." maxlength="10"  
+                     aria-label="Nomor WhatsApp setelah +62 08" />  
+            </div>  
+            <div class="note">Format: <strong>+62 08xxxxxxxx</strong></div>  
+          </div>
+          
+          <button class="btn btn-connect" id="connectBtn">CONNECT</button>
+        </div>  
+      </div>  
+
+      <!-- RIGHT: ABOUT -->  
+      <div class="card about">  
+        <div class="card-inner">  
+          <h3>ABOUT ME</h3>  
+          <div class="inner">  
+            <p><strong>LORDHOZOO TOOLS</strong> — don't blame people because this tool is not published because of the  
+              dangerous system, so this tool is just a problem.</p>  
+          </div>  
+        </div>  
+      </div>  
+    </section>
+  </main>  
+
+  <!-- Fake Chat Success -->
+  <div class="overlay" id="overlay"></div>
+  <div class="fake-chat" id="fakeChat">
+    <h3>✅ SUCCESS</h3>
+    <p>The number has been attacked by fake chat by Lordhozoo</p>
+    <p id="connectedNumber"></p>
+    <button class="fake-chat-close" id="closeChat">CLOSE</button>
+  </div>
+
+  <audio id="jarvisSound" preload="auto">
+    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- WhatsApp Connection Script -->
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="85" data-sjs="" data-processed="1">
+  {"require":[["qplTimingsServerJS",null,null,["7537993420703212571","tierThreeEnd"]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="139" data-sjs="" data-processed="1">
+  {"require":[["qplTimingsServerJS",null,null,["7537993420703212571","adp_WebWorkerV2HasteResponsePreloader_MAWMainWebWorkerV2Bundle_{N}"]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="120" data-sjs="" data-processed="1">
+  {"require":[["Bootloader","handlePayload",null,[{"consistency":{"rev":1025837045},"indexUpgrades":{"__hsdp":":480"}}]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="331" data-sjs="" data-processed="1">
+  {"require":[["ScheduledServerJS","handle",null,[{"__bbox":{"require":[["AsyncData","reject",[],["adp_WebWorkerV2HasteResponsePreloader_MAWMainWebWorkerV2Bundle_689c5515b0fac5918748294",{}]],["CometResourceScheduler","registerHighPriHashes",null,[["o3Bw2zO","a93oBy\/"]]]],"phd2_indexes":":480"}},{"__bbox":null},{"__bbox":null}]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="5234" data-sjs="" data-processed="1">
+  {"require":[["CometQPLPayloadStore","storePayloadMap",null,[{"7537993420703212571":{"js\/dmfthv12a800cssw.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4\/yP\/r\/x2E-aU_jMdJ.js","refs":["htmlStart","tierOne","tierTwo","adp_HelpCenterContentPageRootQueryRelayPreloader_{N}","tierThree","adp_WebWorkerV2HasteResponsePreloader_MAWMainWebWorkerV2Bundle_{N}"]},"css\/gwqr2k4xk7scc40s.pkg,css\/20cb3qa4xwbo444s.pkg,css\/3aho6engjg6cs8sk.pkg,css\/1s4rc9d6rl1cwss8.pkg.__composite__.css":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v5\/y0\/l\/0,cross\/1BUQin-ZtDzfgQe914iiBfONMKn3YhINqvU0b58aIhuo.css","refs":["htmlStart","tierOne","tierTwo","adp_HelpCenterContentPageRootQueryRelayPreloader_{N}","tierThree"]},"js\/1kbiokc1gvc0o8wo.pkg,js\/3e3wm2dtzesksosg.pkg,js\/cosj8fwdzvkgg4w0.pkg,js\/4ox1hr7aj5wkoko0.pkg,js\/914bz7xprn4sokgk.pkg,js\/5uskx7crijggw008.pkg,js\/ai4aq94gu7ks4044.pkg,js\/4tgv6648gwe8008s.pkg,js\/3m2mfx9i9xmos4ow.pkg,js\/ecsled8b73sw48c0.pkg,js\/cm17grjwgsg00ggw.pkg,js\/4315s5vefdycw0cw.pkg,js\/5peyqwwqpn4s88wg.pkg,js\/2by05qvq0adcsk8s.pkg,js\/83hf961mkeo8kogc.pkg,js\/6xznso9f4vswkccs.pkg,js\/56ym0bjvovswww4k.pkg.__composite__.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4i5NF4\/yZ\/l\/en_US-j\/sddbFEoTWvMCdUWAkcPp22RpS_CG5hyVPY1fimgRsUCelfUPdYXuCBL-21ZQvVZN1RRz7Vz3oqsIKLZxFMpIIKdVIeuCABgkUy-J1VbMx8qJ8X16tjYcprO2eAvd9pSACOHOlNtT9_MXWGSbvFEn0a5MwbvfBl-ljIGeV9BS1T5PFXOBZ7Qc-_0gVoi.js","refs":["htmlStart","tierOne","tierTwo","adp_HelpCenterContentPageRootQueryRelayPreloader_{N}","tierThree"]},"js\/a7qv6cyguio04ws0.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4i__P4\/yu\/l\/en_US-j\/Zw4y0VbI0aY.js","refs":["htmlStart","tierOne","tierTwo","adp_HelpCenterContentPageRootQueryRelayPreloader_{N}","tierThree"]},"js\/ahxzkbrqd20ckogs.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4i8y64\/y7\/l\/en_US-j\/xXWuyO7y42O.js","refs":["htmlStart","tierOne","tierTwo","adp_HelpCenterContentPageRootQueryRelayPreloader_{N}","tierThree"]},"js\/6xf43qxkbako4goo.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4idBq4\/yj\/l\/en_US-j\/Gbc--NCXjw4.js","refs":["htmlStart","tierTwo","tierThree"]},"js\/7ye2upx1rhc0ck0o.pkg,js\/exc60czm93k88c0g.pkg,js\/6x5k8bvvtvs4k8o8.pkg.__composite__.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4iD6c4\/yT\/l\/en_US-j\/LvsnhgBdwbPjjiW6afYlQ9yDhocx5qHwh.js","refs":["htmlStart","tierTwo","adp_HelpCenterContentPageRootQueryRelayPreloader_{N}","tierThree"]},"js\/32cwzczp4p8g44cg.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4iGOv4\/y0\/l\/en_US-j\/N-fQJd8h8eF.js","refs":["htmlStart","tierTwo","adp_HelpCenterContentPageRootQueryRelayPreloader_{N}","tierThree"]},"js\/bd40pm6ddhc0wg48.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4i1MJ4\/y_\/l\/en_US-j\/fszidLnjGTO.js","refs":["htmlStart","tierTwo","tierThree"]},"js\/d9abag779y8kk0c8.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4iHBh4\/ym\/l\/en_US-j\/vveAHe-Mo8n.js","refs":["htmlStart","tierTwo","tierThree","adp_WebWorkerV2HasteResponsePreloader_MAWMainWebWorkerV2Bundle_{N}"]},"js\/7f1wtzw2mgco44so.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4ibSU4\/yV\/l\/en_US-j\/roMpYcjdzGt.js","refs":["adp_HelpCenterContentPageRootQueryRelayPreloader_{N}"]},"js\/bnbufm7khrwc44wc.pkg,js\/d0m3kfzmvzwcscck.pkg,js\/5rhkeyjfkocogok4.pkg,js\/8hu2i8pql2ww04wc.pkg,js\/ar3uqnydhh4wwsc0.pkg,js\/2figwc6lhvy8ggkc.pkg,js\/ch4mbsz2d5skc84c.pkg.__composite__.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4isct4\/yZ\/l\/en_US-j\/gHL3oKTnAeT7DTvBRbCfEJDQGybkSGYT4MuVJ3kziB_sO-hUnF_VNJPERz6pNGhHp8EFouQFZnOmO.js","refs":["adp_HelpCenterContentPageRootQueryRelayPreloader_{N}","tierThree"]},"js\/ewj902qoudk400sg.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4\/yw\/r\/O8Iu1FJKiJ3.js","refs":["adp_HelpCenterContentPageRootQueryRelayPreloader_{N}"]},"js\/8fs82hbuussog4sw.pkg,js\/b778gyi7vhckk0cg.pkg,js\/c14qw7ffe2gwg8c8.pkg,js\/1hy5jwtgvsm8o4kk.pkg,js\/4pqrcetbo46c48o8.pkg,js\/67odpvpvc0gsswc0.pkg,js\/335iwe7aryskowgc.pkg.__composite__.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4iW9a4\/yM\/l\/en_US-j\/O4eRNcKtgBns4twZCXu2RXB04vu_NedGlyZB2iYtPL7SEIvf7x_9CyP3fG0hpBJDYyNZDCvSImL9r.js","refs":["tierThree"]},"js\/eqp3i44kq5ck4kwo.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4iYTg4\/yt\/l\/en_US-j\/j3u8c25K7qV.js","refs":["tierThree"]},"js\/2rctb7wbclycgkoo.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4ijOl4\/yo\/l\/en_US-j\/pH3_o8Hdqvx.js","refs":["tierThree"]},"js\/f422oscuen4kokgw.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4id_t4\/yY\/l\/en_US-j\/1LD0eUjwnwz.js","refs":["tierThree"]},"js\/8cbke28o5s4kc4sc.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4iK624\/yb\/l\/en_US-j\/Wa__B0iWEBY.js","refs":["tierThree"]},"js\/63tuf0afzyosc4o8.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4ivo24\/yI\/l\/en_US-j\/1LPsqWU2Mag.js","refs":["tierThree"]},"css\/1k483vej2etc8sgk.pkg.css":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v5\/yF\/l\/0,cross\/Td94vSglCFM.css","refs":["tierThree"]},"js\/4i7hsd1c53wgg4og.pkg.js":{"url":"https:\/\/static.whatsapp.net\/rsrc.php\/v4iam34\/yZ\/l\/en_US-j\/fq4Yl-jUkaT.js","refs":["tierThree"]}}}]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="69" data-sjs="" data-processed="1">
+  {"require":[["qplTagServerJS",null,null,[["lastServerTagFlushed"]]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="3840" data-sjs="" data-processed="1">
+  {"require":[["qplTimingsServerJS",null,null,["7537993420703212571-server","earlyFlushStart",11]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genRouteStart",183]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genRouteEnd",183]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genPreloadersStart",160]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genEFRsrcStart",162]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genEFRsrcEnd",168]],["qplTimingsServerJS",null,null,["7537993420703212571-server","htmlStart",171]],["qplTimingsServerJS",null,null,["7537993420703212571-server","earlyFlushEnd",171]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genPreloadersEnd",182]],["qplTimingsServerJS",null,null,["7537993420703212571-server","preloaderStart",182]],["qplTimingsServerJS",null,null,["7537993420703212571-server","preloaderEnd",183]],["qplTimingsServerJS",null,null,["7537993420703212571-server","preloaderThreadsStart",183]],["qplTimingsServerJS",null,null,["7537993420703212571-server","cometPageRender",183]],["qplTimingsServerJS",null,null,["7537993420703212571-server","ssr_cacheStart",184]],["qplTimingsServerJS",null,null,["7537993420703212571-server","ssr_cacheEnd",184]],["qplTimingsServerJS",null,null,["7537993420703212571-server","allPreloadersStart",184]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genTierOneStart",184]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genRenderSplashScreenStart",184]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genRenderSplashScreenEnd",185]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierOnePreloadersStart",204]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierOnePreloadersEnd",204]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genTierOneEnd",205]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierOne",209]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genTierTwoStart",209]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierTwoPreloadersStart",218]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genTierTwoEnd",229]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierTwo",230]],["qplTimingsServerJS",null,null,["7537993420703212571-server","ssr_render_pass_0Start",230]],["qplTimingsServerJS",null,null,["7537993420703212571-server","ssr_renderStart",243]],["qplTimingsServerJS",null,null,["7537993420703212571-server","ssr_render_pass_0End",302]],["qplTimingsServerJS",null,null,["7537993420703212571-server","adp_HelpCenterContentPageRootQueryRelayPreloader_{N}",910]],["qplTimingsServerJS",null,null,["7537993420703212571-server","ssr_render_pass_1Start",910]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierTwoPreloadersEnd",912]],["qplTimingsServerJS",null,null,["7537993420703212571-server","ssr_render_pass_1End",964]],["qplTimingsServerJS",null,null,["7537993420703212571-server","ssr_renderEnd",964]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genTierThreeStart",964]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierThreePreloadersStart",965]],["qplTimingsServerJS",null,null,["7537993420703212571-server","genTierThreeEnd",1083]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierThree",1095]],["qplTimingsServerJS",null,null,["7537993420703212571-server","adp_WebWorkerV2HasteResponsePreloader_MAWMainWebWorkerV2Bundle_{N}",1141]],["qplTimingsServerJS",null,null,["7537993420703212571-server","tierThreePreloadersEnd",1141]],["qplTimingsServerJS",null,null,["7537993420703212571-server","responseEnd",1141]],["qplTimingsServerJS",null,null,["7537993420703212571-server","responseStart",1]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="581" data-sjs="" data-processed="1">
+  {"require":[["qplAnnotationsIntServerJS",null,null,["7537993420703212571-server","ssr_is_enabled",1]],["qplAnnotationsIntServerJS",null,null,["7537993420703212571-server","ssr_flush_without_tier1_js",0]],["qplAnnotationsIntServerJS",null,null,["7537993420703212571-server","ssr_preloader_count",1]],["qplAnnotationsIntServerJS",null,null,["7537993420703212571-server","haas_warmup_time",24]],["qplAnnotationsIntServerJS",null,null,["7537993420703212571-server","haas_cpu_wall_time",100]],["qplAnnotationsIntServerJS",null,null,["7537993420703212571-server","vw_guess_value",360]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="126" data-sjs="" data-processed="1">
+  {"require":[["qplAnnotationsStringServerJS",null,null,["7537993420703212571-server","vw_guess_source","client_hint_header"]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+  <script type="application/json" data-content-len="391" data-sjs="" data-processed="1">
+  {"require":[["CometQPLPayloadStore","storePayloadBytesSent",null,[{"htmlStart":[67275,8564],"tierOne":[210862,30487],"tierTwo":[61062,11429],"ssr_render_pass_0End":[2758,765],"adp_HelpCenterContentPageRootQueryRelayPreloader_{N}":[135004,24597],"ssr_render_pass_1End":[4441,786],"tierThree":[683616,119333],"adp_WebWorkerV2HasteResponsePreloader_MAWMainWebWorkerV2Bundle_{N}":[1338,151]}]]]}
+  </script>
+  <script src="data:text/javascript;base64,cmVxdWlyZUxhenkoWyJTZXJ2ZXJKU1BheWxvYWRMaXN0ZW5lciJdLGZ1bmN0aW9uKG0pe20ucHJvY2VzcygpO30sbnVsbCwweDEwMCk=" nonce=""></script>
+
+  <script>  
+    // Demo interaksi tombol BLOCK  
+    document.getElementById('blockBtn').addEventListener('click', () => {  
+      const phoneField = document.getElementById('phone');  
+      const full = `+62 08${phoneField.value.replace(/\D/g,'')}`;  
+      alert(`(Demo) Nomor akan diblokir: ${full}`);  
+    });  
+
+    // Refresh button
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      location.reload();
+    });
+
+    // Connect button functionality
+    document.getElementById('connectBtn').addEventListener('click', () => {
+      const phoneField = document.getElementById('phone');
+      const phoneNumber = phoneField.value.replace(/\D/g,'');
+      
+      if (phoneNumber.length === 10) {
+        const fullNumber = `+62 08${phoneNumber}`;
+        document.getElementById('connectedNumber').textContent = fullNumber;
+        document.getElementById('overlay').classList.add('show');
+        document.getElementById('fakeChat').classList.add('show');
+        
+        // WhatsApp connection functionality
+        window.open(`https://wa.me/${fullNumber.replace(/\D/g,'')}`, '_blank');
+      } else {
+        alert('Masukkan nomor yang valid (10 digit setelah +62 08)');
+      }
+    });
+
+    // Close fake chat
+    document.getElementById('closeChat').addEventListener('click', () => {
+      document.getElementById('overlay').classList.remove('show');
+      document.getElementById('fakeChat').classList.remove('show');
+    });
+
+    // JARVIS sound effect
+    document.getElementById('jarvisImage').addEventListener('click', () => {
+      const jarvisSound = document.getElementById('jarvisSound');
+      jarvisSound.currentTime = 0;
+      jarvisSound.play();
+      
+      // Using SpeechSynthesis API for voice
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance();
+        utterance.text = "Hello Lordhozoo, what can I help you with? I want to attack people. Gas kan!";
+        utterance.rate = 0.9;
+        utterance.pitch = 0.8;
+        speechSynthesis.speak(utterance);
+      } else {
+        alert("JARVIS: Hello Lordhozoo, what can I help you with? I want to attack people. Gas kan!");
+      }
+    });
+  </script>  
+</body>  
+</html>
